@@ -35,7 +35,7 @@ class SensorController:
     def gps_data_handler(gps_data):
         # configuration
         disable_pm_sensor = True
-        write_json_to_file = False
+        write_json_to_file = True
 
         # check if we don't move
         if float(gps_data["VTG"].spd_over_grnd_kmph) > 2.5:
@@ -54,7 +54,8 @@ class SensorController:
         GpsReader.debug_gps_data(gps_data)
 
         # read sensor data
-        pm_sensor.readBlockingSensorData()
+        if not disable_pm_sensor:
+            pm_sensor.readBlockingSensorData()
         dht11_sensor_data = dht11.get_all_values()
         # convert to json
         lat_lon = SensorController.extract_gps(gps_data)
@@ -88,6 +89,10 @@ class SensorController:
             ]
         }
 
+        #close pm serial
+        if not disable_pm_sensor:
+            pm_sensor.closeSerial()
+
         # push to cloud
         if write_json_to_file:
             with open('debug_positions.txt', 'a') as debug_file:
@@ -96,6 +101,8 @@ class SensorController:
         else:
             cloud_syncer = CloudSyncer()
             cloud_syncer.push_json(json_data)
+
+
 
         # for debugging
         print("sleep 10 seconds")

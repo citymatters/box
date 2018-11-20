@@ -25,6 +25,15 @@ class HPMA115S0:
         self._serial.timeout = 1
         self._serial.open()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.closeSerial()
+
+    def closeSerial(self):
+        self._serial.close()
+
     def init(self):
         """
         Function which initializes the sensor.
@@ -148,3 +157,5 @@ class HPMA115S0:
                 count += 1
                 index += 1
         return [buffer, count]
+
+
