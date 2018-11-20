@@ -8,10 +8,8 @@ class CloudSyncer:
 
     CITY_MATTERS_POST_URL = "https://smartcountryhacks.citymatters.de/api/add"
 
-
     def __init__(self, post_url = CITY_MATTERS_POST_URL):
         self._post_url = post_url
-
 
     def push_json(self, json_data):
         json_params = json.dumps(json_data).encode('utf8')
