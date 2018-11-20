@@ -16,8 +16,8 @@ class CloudSyncer:
         req = urllib.request.Request(self._post_url, data=json_params,
                                      headers={'content-type': 'application/json'})
         response = urllib.request.urlopen(req)
-        print("HTTP response:");
-        print(response.read().decode('utf-8'));
+        print("HTTP response:")
+        print(response.read().decode('utf-8'))
 
 
 
