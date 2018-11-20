@@ -119,6 +119,14 @@ class HPMA115S0:
 
         return False
 
+    def readBlockingSensorData(self):
+        self._pm2_5 = None
+        self._pm10 = None
+        while not self.readParticleMeasurement():
+            time.sleep(1)
+        print("PM2.5: %d ug/m3" % (self._pm2_5))
+        print("PM10: %d ug/m3" % (self._pm10))
+
     def readStringUntil(self, terminator):
         """
         Function to start reading when the sensor is ready to transmit datas
