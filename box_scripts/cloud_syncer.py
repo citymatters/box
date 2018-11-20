@@ -8,18 +8,16 @@ class CloudSyncer:
 
     CITY_MATTERS_POST_URL = "https://smartcountryhacks.citymatters.de/api/add"
 
-
     def __init__(self, post_url = CITY_MATTERS_POST_URL):
         self._post_url = post_url
-
 
     def push_json(self, json_data):
         json_params = json.dumps(json_data).encode('utf8')
         req = urllib.request.Request(self._post_url, data=json_params,
                                      headers={'content-type': 'application/json'})
         response = urllib.request.urlopen(req)
-        print("HTTP response:");
-        print(response.read().decode('utf-8'));
+        print("HTTP response:")
+        print(response.read().decode('utf-8'))
 
 
 
