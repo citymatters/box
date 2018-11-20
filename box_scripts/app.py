@@ -5,6 +5,7 @@ from cloud_syncer import CloudSyncer
 import serial
 import time
 import json
+import pynmea2
 
 GPS_UART = "/dev/ttyO1"
 PM_UART = "/dev/ttyO4"
@@ -20,21 +21,27 @@ class SensorController:
     @staticmethod
     def extract_gps(gps_data):
         lon_dir = gps_data["RMC"].lon_dir
-        lon = float(gps_data["RMC"].lon)
+        lon = pynmea2.dm_to_sd(gps_data["RMC"].lon)
         print("lon_dir", lon_dir)
         if lon_dir == "W":
             lon = lon * -1.0
 
         lat_dir = gps_data["RMC"].lat_dir
-        lat = float(gps_data["RMC"].lat)
+        lat = pynmea2.dm_to_sd(gps_data["RMC"].lat)
         if lat_dir == "S":
             lat = lat * -1.0
         return lat, lon
 
     @staticmethod
+    def to_timestamp(gps_timestamp):
+        print("gps timestamp : {} and type {}".format(gps_timestamp, type(gps_timestamp)))
+        pynmea2_timestamp = pynmea2.timestamp(gps_timestamp)
+        return time.mktime(pynmea2_timestamp.timetuple())
+
+    @staticmethod
     def gps_data_handler(gps_data):
         # configuration
-        disable_pm_sensor = True
+        disable_pm_sensor = False
         write_json_to_file = True
 
         # check if we don't move
@@ -64,7 +71,7 @@ class SensorController:
             "sensor": "7ff15087-6bf0-4c74-aff5-260c7591caa2",
             "lat": lat_lon[0],
             "lon": lat_lon[1],
-            "datetime": 1529150870,
+            "datetime": time.mktime(gps_data["RMC"].datetime.timetuple()),
             "data": [
                 {
                     "type": "temperature",
