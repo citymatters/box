@@ -40,5 +40,5 @@ def main():
     print("Current temperature : {} current humidity : {}".format(value_list[0], value_list[1]))
 
 
-#if __name__ == "__main__":
-main()
+if __name__ == "__main__":
+    main()
