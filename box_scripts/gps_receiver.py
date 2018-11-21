@@ -10,12 +10,9 @@ class GpsReader:
         self._nmea_stream_reader = pynmea2.NMEAStreamReader()
         self._serial_input = serial_input
 
-    def _empty_expected_data(self):
-        return {"RMC" : None, "VTG" : None}
-
     def read_mainloop(self, callback = None):
         # (RMC, VTG)
-        expected_data = self._empty_expected_data()
+        expected_data = GpsReader._empty_expected_data()
         while 1:
             gps_input = self._serial_input.readline()
             for gps_sentence in self._nmea_stream_reader.next(gps_input.decode("utf-8", errors="ignore")):
@@ -29,7 +26,7 @@ class GpsReader:
                             if expected_data["RMC"].is_valid:
                                 if callback is not None:
                                    callback(expected_data)
-                                expected_data = self._empty_expected_data()
+                                expected_data = GpsReader._empty_expected_data()
                                 #self._serial_input.flush()
                             else:
                                 print("invalid state")
@@ -46,6 +43,10 @@ class GpsReader:
     def debug_gps_data(gps_data):
         print("RMC", gps_data["RMC"])
         print("VTG", gps_data["VTG"])
+
+    @staticmethod
+    def _empty_expected_data(self):
+        return {"RMC": None,"VTG": None}
 
 
 def main():
