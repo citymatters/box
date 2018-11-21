@@ -45,7 +45,7 @@ class GpsReader:
         print("VTG", gps_data["VTG"])
 
     @staticmethod
-    def _empty_expected_data(self):
+    def _empty_expected_data():
         return {"RMC": None,"VTG": None}
 
 

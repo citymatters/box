@@ -97,8 +97,8 @@ class SensorController:
 
 
         # for debugging
-        print("sleep 10 seconds")
-        time.sleep(10)
+        print("sleep 5 seconds")
+        time.sleep(5)
 
 
 if __name__ == '__main__':
