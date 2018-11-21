@@ -26,16 +26,15 @@ class GpsReader:
                         expected_data["VTG"] = gps_sentence
                         # we assume that vtg is the last element that is read
                         if expected_data["RMC"] is not None and expected_data["VTG"] is not None:
-                            if expected_data["RMC"].status == "V":
-                                #invalid
-                                print("invalid state")
-                                print("expected_data[RMC]: {}".format(expected_data["RMC"]))
-                                print("expected_data[VTG]: {}".format(expected_data["VTG"]))
-                            else:
+                            if expected_data["RMC"].is_valid:
                                 if callback is not None:
                                    callback(expected_data)
                                 expected_data = self._empty_expected_data()
                                 #self._serial_input.flush()
+                            else:
+                                print("invalid state")
+                                print("expected_data[RMC]: {}".format(expected_data["RMC"]))
+                                print("expected_data[VTG]: {}".format(expected_data["VTG"]))
                 except Exception as e:
                     print("###### error ######")
                     print(e)

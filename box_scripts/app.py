@@ -19,20 +19,6 @@ class SensorController:
         self._gps_parser.read_mainloop(SensorController.gps_data_handler)
 
     @staticmethod
-    def extract_gps(gps_data):
-        lon_dir = gps_data["RMC"].lon_dir
-        lon = pynmea2.dm_to_sd(gps_data["RMC"].lon)
-        print("lon_dir", lon_dir)
-        if lon_dir == "W":
-            lon = lon * -1.0
-
-        lat_dir = gps_data["RMC"].lat_dir
-        lat = pynmea2.dm_to_sd(gps_data["RMC"].lat)
-        if lat_dir == "S":
-            lat = lat * -1.0
-        return lat, lon
-
-    @staticmethod
     def to_timestamp(gps_timestamp):
         print("gps timestamp : {} and type {}".format(gps_timestamp, type(gps_timestamp)))
         pynmea2_timestamp = pynmea2.timestamp(gps_timestamp)
@@ -65,12 +51,11 @@ class SensorController:
             pm_sensor.readBlockingSensorData()
         dht11_sensor_data = dht11.get_all_values()
         # convert to json
-        lat_lon = SensorController.extract_gps(gps_data)
 
         json_data = {
             "sensor": "7ff15087-6bf0-4c74-aff5-260c7591caa2",
-            "lat": lat_lon[0],
-            "lon": lat_lon[1],
+            "lat": gps_data["RMC"].latitude,
+            "lon": gps_data["RMC"].longitude,
             "datetime": time.mktime(gps_data["RMC"].datetime.timetuple()),
             "data": [
                 {
